@@ -30,4 +30,4 @@ def xml_to_csv(path):
 
     return output
 
-# xml_to_csv('data/Persian.xml').to_csv('data/out.csv')
+xml_to_csv('data/Persian.xml').to_csv('data/out.csv')
