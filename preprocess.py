@@ -4,6 +4,7 @@ import nltk
 from nltk.stem import PorterStemmer
 lemma = nltk.WordNetLemmatizer()
 stemmer = PorterStemmer()
+import numpy as np
 # nltk.download("wordnet")
 
 
@@ -50,5 +51,12 @@ def english_preprocess():
     return title_tokens, description_tokens, most_common
 
 
-if __name__ == '__main__':
-    title_tokens, description_tokens, most_common_word = english_preprocess()
+def cache_preprocessed_docs(filename, tokens):
+    np.saves(filename, np.array(tokens))
+
+
+def load_preprocessed_docs(filename):
+    return np.load(filename)
+
+# if __name__ == '__main__':
+#     title_tokens, description_tokens, most_common_word = english_preprocess()
