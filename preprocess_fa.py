@@ -1,7 +1,7 @@
 import re
 import pandas as pd
 import hazm
-
+from collections import Counter
 def preprocess_farsi (text):
 
     prohibitedWords = ['[[', ']]', '{{', '}}', '{|', '|', '*', '==', '=', '\'\'\'' ,'_']
@@ -50,11 +50,37 @@ def preprocess_farsi (text):
 
 
 
+def find_stopwords (PATH):
+    all_text_tokens = []
+    all_title_tokens = []
+    wikis = pd.read_csv(PATH)
+    titles = list(wikis['title'])
+    texts = list(wikis['text'])
+    processed_texts = []
+    processed_titles = []
+    for i in range(len(texts)):
+        processed_texts.append(preprocess_farsi(texts[i]))
+        processed_titles.append(preprocess_farsi(titles[i]))
+        all_text_tokens += processed_texts[i]
+        all_title_tokens += processed_titles[i]
+
+    all_tokens = all_text_tokens + all_title_tokens
+    occurances = dict(Counter(all_tokens))
+    stopwords = {k: v for k, v in sorted(occurances.items(), key=lambda item: item[1], reverse=False)}
+    most_common = []
+    for k in stopwords.keys():
+        if stopwords[k] > (0.01 * len(all_tokens)):
+            most_common += [k]
+
+    return most_common
 
 
-wikis = pd.read_csv('data/out.csv')
-titles = list(wikis['title'])
-texts = list(wikis['text'])
-preprocess_farsi(texts[8])
+def remove_stop_words(tokens, stopwords):
+    return [word for word in tokens if word not in stopwords]
+
+
+
+
+
 
 
