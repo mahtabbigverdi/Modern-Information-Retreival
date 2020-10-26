@@ -1,6 +1,7 @@
 from positional import *
 import numpy as np
 import math
+import itertools
 
 def get_logarithmic_tf(index, term, doc):
     tf = get_tf(index, term, doc)
@@ -53,11 +54,60 @@ def score_tfidf(index, query, total_number_of_docs):
     scores /= lengths
     scores /= query_size
 
-    top_docs = np.argsort(scores)[-10: ][::-1]
-    return top_docs
+    return scores
+
+def has_all_terms(index, my_query, doc_id):
+    for term in my_query:
+        if doc_id not in index[term]:
+            return False
+    return True
+
+def find_total_distance_between_words(indexes):
+    out = 0
+    for i in range(len(indexes)-1):
+        out += (indexes[i+1] - indexes[i])
+    return out
+
+def proximity_search(index, total_number_of_docs, query, window):
+    my_query = list(set(query))
+    relevants = []
+    for doc_id in range(total_number_of_docs):
+        if not has_all_terms(index,my_query, doc_id):
+            continue
+        positions = []
+        for term in my_query :
+            positions.append(index[term][doc_id])
+        product = itertools.product(*positions)
+        product = [sorted(list(item)) for item in product]
+        windows = [find_total_distance_between_words(seq) for seq in product ]
+        smallest_window = np.min(windows)
+        if smallest_window <= window :
+            relevants.append(doc_id)
+    return relevants
 
 
-index = (load_index('pos_index' + '.pkl'))
-query =['i','am','good', 'girl']
 
-print(score_tfidf(index, query, 3))
+def proximity_tfidf(index, total_number_of_docs, query, window):
+    proximity_relevants = proximity_search(index, total_number_of_docs, query, window)
+    scores = score_tfidf(index, query, total_number_of_docs)
+
+    scores_of_relevants = map(scores.__getitem__, proximity_relevants)
+
+    ordered_relevants= [id for _, id in sorted(zip(scores_of_relevants, proximity_relevants))]
+
+    return ordered_relevants
+
+
+
+
+
+
+
+# index = (load_index('pos_index' + '.pkl'))
+# query =['good', 'a']
+# print(proximity_tfidf(index,3,query,2))
+
+# top_scores = score_tfidf(index, query, 3)[-10,:][::-1]
+
+
+
