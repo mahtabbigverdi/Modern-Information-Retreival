@@ -71,6 +71,16 @@ def del_doc(doc, number_of_doc, PATH):
     positional_index = dict(collections.OrderedDict(sorted(positional_index.items())))
     save_index(positional_index)
 
+
+def get_df (positional, term):
+    return len (positional[term])
+
+def get_tf (positional, term, doc):
+    return len(positional[term][doc]) if doc in positional[term] else 0
+
+def get_cf(positional, term):
+    return sum([len(positions) for positions in positional[term].values()])
+
 # docs =[
 #     ['i','am','a', 'very', 'good' ,'girl' ,'really' ,'really' ,'good'],
 #     ['good','girl','is', 'a', 'girl' ,'who' ,'studies' ,'well' ],
@@ -78,7 +88,8 @@ def del_doc(doc, number_of_doc, PATH):
 # ]
 
 # save_index(build_positional_index(docs))
-# print(load_index('pos_index' + '.pkl'))
+# x = (load_index('pos_index' + '.pkl'))
+# print(get_tf(x, 'girl',0))
 # add_doc(['i','am','a', 'very', 'nice' ,'person'], 3,'pos_index.pkl')
 # show_positions('good', 'pos_index.pkl')
 # del_doc(['i','am','a', 'very', 'good' ,'girl' ,'really' ,'really' ,'good'],0,'pos_index.pkl')
