@@ -13,4 +13,22 @@ def edit_distance(t1, t2):
     return table[-1][-1]
 
 
-print(edit_distance('snow', 'osio'))
+def jaccard_distance(wrong_dictation, word):
+    bigram_wrong = count_bigrams(wrong_dictation)
+    bigram_word = count_bigrams(word)
+    intersection = len(list(set(bigram_wrong).intersection(bigram_word)))
+    union = (len(bigram_wrong) + len(bigram_word)) - intersection
+    return float(intersection) / union
+
+
+def count_bigrams(word):
+    bigrams = []
+    for i in range(len(word) - 1):
+        new_key = word[i] + word[i + 1]
+        bigrams.append(new_key)
+    return bigrams
+
+
+# print(jaccard_distance('bord', 'boardroom'))
+
+# print(edit_distance('snow', 'osio'))
