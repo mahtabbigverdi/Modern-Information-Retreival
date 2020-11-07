@@ -58,7 +58,12 @@ def find_most_common_words():
 def parse_all_docs(set, most_common):
     all_tokens = []
     for s in set:
-        tokens = english_preprocess(s)
-        remove_stop_words(tokens, most_common)
+        tokens = doc_preprocess(s, most_common)
         all_tokens += [tokens]
     return all_tokens
+
+
+def doc_preprocess(doc, most_common):
+    tokens = english_preprocess(doc)
+    tokens = remove_stop_words(tokens, most_common)
+    return tokens
