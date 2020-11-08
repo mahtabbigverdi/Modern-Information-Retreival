@@ -1,5 +1,5 @@
 import sys
-
+from bitarray import bitarray
 
 ####### Variable length encoding:
 def VB_encode_number(num):
@@ -41,13 +41,13 @@ def VB_decode(bytestream):
 def gamma_encode_number(num):
     binary_num = format(num, 'b')
     binary_num = binary_num[1:]
-    length = '1' * (len(binary_num)) + '0'
+    length = bitarray(1) * (len(binary_num)) + bitarray([False])
     res = length + binary_num
     return res
 
 
 def gamma_encode_all(numbers):
-    bytestream = ''
+    bytestream = bitarray()
     for num in numbers:
         x = gamma_encode_number(num)
         bytestream += x
@@ -59,10 +59,10 @@ def gamma_decode(bits):
     i = 0
     last = 0
     while i < len(bits):
-        if bits[i] == '0':
+        if bits[i] == False:
             length = i - last
-            offset = '1' + bits[i + 1:i + length + 1]
-            numbers += [int(offset, 2)]
+            offset = bitarray(1) + bits[i + 1:i + length + 1]
+            numbers += [int(offset.to01(),2)]
             i += length + 1
             last = i
         else:
@@ -71,6 +71,27 @@ def gamma_decode(bits):
 
 # t = VB_encode_all([824, 5])
 # print(VB_decode(t))
+t = gamma_encode_all([1025, 9, 4, 3, 9, 10, 20, 895])
+print(t)
+print(gamma_decode(t))
 
-# t = gamma_encode_all([1025, 9, 4, 3])
-# print(gamma_decode(t))
+def VB_encode_positional(pos_index):
+    for term in pos_index.keys():
+        for doc_id in pos_index[term].keys():
+            positions = pos_index[term][doc_id]
+            pos_gaps = [positions[0]] + [positions[i]-positions[i-1] for i in range(1, len(positions))]
+            pos_index[term][doc_id] = VB_encode_all(pos_gaps)
+        doc_ids = sorted(pos_index[term].keys())
+        # print(doc_ids)
+        doc_id_gaps = [doc_ids[0]] + [doc_ids[i]-doc_ids[i-1] for i in range(1, len(doc_ids))]
+        # print(doc_id_gaps)
+        doc_id_gaps_compressed = VB_encode_all(doc_id_gaps)
+        # print(doc_id_gaps_compressed)
+        for i in range(len(doc_ids)):
+            pos_index[term][doc_id_gaps_compressed[i]] = pos_index[term][doc_ids[i]]
+            del pos_index[term][doc_ids[i]]
+    return pos_index
+
+# a = { 'hello': {1: [1, 2, 3, 4], 4: [2, 4, 6]},
+#       'bye' : {9: [3, 6, 9], 8:[8, 16]} }
+# print(VB_encode_positional(a))
