@@ -81,17 +81,20 @@ def VB_encode_positional(pos_index):
             positions = pos_index[term][doc_id]
             pos_gaps = [positions[0]] + [positions[i]-positions[i-1] for i in range(1, len(positions))]
             pos_index[term][doc_id] = VB_encode_all(pos_gaps)
-        doc_ids = sorted(pos_index[term].keys())
-        # print(doc_ids)
-        doc_id_gaps = [doc_ids[0]] + [doc_ids[i]-doc_ids[i-1] for i in range(1, len(doc_ids))]
-        # print(doc_id_gaps)
-        doc_id_gaps_compressed = VB_encode_all(doc_id_gaps)
-        # print(doc_id_gaps_compressed)
-        for i in range(len(doc_ids)):
-            pos_index[term][doc_id_gaps_compressed[i]] = pos_index[term][doc_ids[i]]
-            del pos_index[term][doc_ids[i]]
+    return pos_index
+
+def Gamma_encode_positional(pos_index):
+    for term in pos_index.keys():
+        for doc_id in pos_index[term].keys():
+            positions = pos_index[term][doc_id]
+            pos_gaps = [positions[0]] + [positions[i]-positions[i-1] for i in range(1, len(positions))]
+            pos_index[term][doc_id] = gamma_encode_all(pos_gaps)
     return pos_index
 
 # a = { 'hello': {1: [1, 2, 3, 4], 4: [2, 4, 6]},
 #       'bye' : {9: [3, 6, 9], 8:[8, 16]} }
 # print(VB_encode_positional(a))
+
+a = { 'hello': {1: [1, 2, 3, 4], 4: [2, 4, 6]},
+      'bye' : {9: [3, 6, 9], 8:[8, 16]} }
+print(Gamma_encode_positional(a))
