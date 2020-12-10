@@ -37,7 +37,7 @@ def find_bigrams(word):
 
 def spell_correction(word):
     bigrams = read("description_bigram")
-    bigrams.update(read("title_bigram"))
+    # bigrams.update(read("title_bigram"))
     word_bigrams = find_bigrams(word)
     min_dist = math.inf
     possible_correct_words = []
@@ -47,6 +47,7 @@ def spell_correction(word):
         # print(bigrams[b])
         for w in bigrams[b]:
             if jaccard_distance(word, w) >= 0.3:
+                # print(w)
                 dist = edit_distance(word, w)
                 if dist <= min_dist:
                     min_dist = dist
@@ -68,4 +69,5 @@ def correct_query(q):
 # print(edit_distance('snow', 'osio'))
 # spell_correction("scholo")
 # print(find_bigrams("school"), find_bigrams("scholo"))
-correct_query("gok to scholo")
+correct_query("arghavan")
+#print(jaccard_distance("infromaton", "tomato"))
