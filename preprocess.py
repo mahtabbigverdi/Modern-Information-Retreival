@@ -31,8 +31,8 @@ def remove_stop_words(doc, stopwords):
     return [word for word in doc if word not in stopwords]
 
 
-def find_most_common_words():
-    ted_talks = pd.read_csv('data/ted_talks.csv')
+def find_most_common_words(path):
+    ted_talks = pd.read_csv(path)
     titles = list(ted_talks['title'])
     descriptions = list(ted_talks['description'])
     preprocessed_titles = []
