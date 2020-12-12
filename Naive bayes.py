@@ -28,8 +28,9 @@ class NaiveBayes:
                         self.count_per_word_c_not[token] += 1
                     else:
                         self.count_per_word_c_not[token] = 1
-        self.all_c = sum(self.count_per_word_c.values()) + len(self.count_per_word_c)
-        self.all_c_not = sum(self.count_per_word_c_not.values()) + len(self.count_per_word_c_not)
+        diff_words = len(set(list(self.count_per_word_c.keys()) + list(self.count_per_word_c_not.keys())))
+        self.all_c = sum(self.count_per_word_c.values()) + diff_words
+        self.all_c_not = sum(self.count_per_word_c_not.values()) + diff_words
         print("c:", self.count_per_word_c)
         print("c_not:", self.count_per_word_c_not)
 
@@ -51,3 +52,9 @@ class NaiveBayes:
 train = pandas.read_csv('data/train.csv')
 y_train = train['views'].values
 x_train = train[['title', 'description']].values
+
+# x = NaiveBayes()
+# x.train([['c', 'b', 'c'], ['c', 'c', 's'], ['c', 'm'], ['t', 'j', 'c']], [1, 1, 1, -1])
+# pred = x.predict(['c', 'c', 'c', 't', 'j'])
+# print(pred)
+
