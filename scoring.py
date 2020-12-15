@@ -103,11 +103,16 @@ def proximity_tfidf(index, total_number_of_docs, query, window):
 
 
 
-# index = (load_index('pos_index' + '.pkl'))
-# query =['good', 'a']
+index = (load_index('pos_index' + '.pkl'))
+print(index)
+query =['person']
 # print(proximity_tfidf(index,3,query,2))
 
-# top_scores = score_tfidf(index, query, 3)[-10,:][::-1]
-
+scores = score_tfidf(index, query, 4)
+print(np.argsort(scores)[::-1])
+top_score_docs = np.argsort(scores)[::-1]
+for i in range(len(top_score_docs)):
+    print("doc id : "+ str(top_score_docs[i])+ "  score: "+ str(scores[top_score_docs[i]]))
+ 
 
 

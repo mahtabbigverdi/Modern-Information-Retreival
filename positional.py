@@ -86,9 +86,10 @@ def get_cf(positional, term):
 #     ['good','girl','is', 'a', 'girl' ,'who' ,'studies' ,'well' ],
 #     ['i','am','a', 'very', 'nice' ,'one'],
 # ]
-
+#
 # save_index(build_positional_index(docs))
-# x = (load_index('pos_index' + '.pkl'))
+x = (load_index('pos_index' + '.pkl'))
+print(x)
 # print(get_tf(x, 'girl',0))
 # add_doc(['i','am','a', 'very', 'nice' ,'person'], 3,'pos_index.pkl')
 # show_positions('good', 'pos_index.pkl')

@@ -21,10 +21,9 @@ def preprocess_farsi(text):
     # new_text = new_text.replace('گی','ه')
     tokens = hazm.word_tokenize(new_text)
     stemmer = hazm.Stemmer()
-    lemmatizer = hazm.Lemmatizer()
+
     tokens = [word.replace('\u200c', '‌') for word in tokens ]
     tokens = [stemmer.stem(word) for word in tokens]
-    tokens = [lemmatizer.lemmatize(word) for word in tokens]
     tokens = [word for word in tokens if word != '' ]
     return tokens
 
