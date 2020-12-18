@@ -1,5 +1,3 @@
-import pandas as pd
-import math
 import operator
 import numpy as np
 
@@ -19,7 +17,7 @@ class KNN:
     def sample_distance(self, train_sample, test_sample):
         diff = test_sample - train_sample
         dist = np.power(diff, 2)
-        return math.sqrt(dist)
+        return np.sqrt(np.sum(dist))
 
     def distances(self, test):
         dist = []
