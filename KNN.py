@@ -24,14 +24,14 @@ class KNN:
     def distances(self, test):
         dist = []
         for i in range(len(self.X)):
-            dist.append(self.sample_distance(self.X.iloc[i], test))
+            dist.append(self.sample_distance(self.X[i, :], test))
         return dist
 
-    def predict_sample(self, test, k):
+    def predict(self, test, k):
         self.k = k
         predict = []
         for j in range(len(test)):
-            t = test.iloc[j]
+            t = test[j, :]
             dist = self.distances(t)
             labels = []
             for i in range(len(dist)):
